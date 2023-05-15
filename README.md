@@ -24,6 +24,14 @@
 </div>
 
 ## Para rodar a aplicação: 
+Você precisa configurar sua string de conexão ao banco de dados (Mysql)
+
+<img src='./imagens/string_conexao.png'>
+<p style='font-style: italic'>aqui na url a minha máquina local se conecta como <b>usuario: root </b> e <b>senha: root</b>. Mude se o seu usuário e senha for diferente</p>
+
+<br>
+Instale as dependências:
+
     $ npm i 
     $ npx prisma migrate dev --name init
     $ npm run start
