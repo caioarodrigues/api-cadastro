@@ -9,6 +9,7 @@
                 <li>TypeScript</li>
                 <li>Express</li>
                 <li>Prisma</li>
+                <li>Cors</li>
                 <li>
                     <s>Multer</s>
                 </li>
