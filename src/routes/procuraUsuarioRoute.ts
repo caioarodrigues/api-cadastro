@@ -2,26 +2,38 @@ import { Router, Request, Response } from 'express';
 import DBController from '../controllers/BDController';
 import { GetUsuarioException } from '../exceptions/GetUsuarioException';
 
-const procuraUsuarioRouter = Router();
+const procuraUsuarioRoute = Router();
 const dbController = DBController.criaDBController();
 
-procuraUsuarioRouter.get('/:id', async (req: Request, res: Response) => {
+procuraUsuarioRoute.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
-    const _: number = parseInt(id);
 
-    const usuario = await dbController.getUsuario(_);
-
-    if(usuario instanceof GetUsuarioException){
-        const { message } = usuario;
-
-        console.log('erro ao buscar usuário: ');
-        console.error(message);
-
-        res.sendStatus(404);
+    try{
+        const _: number = parseInt(id);
+    
+        const usuario = await dbController.getUsuario(_);
+    
+        if(usuario instanceof GetUsuarioException){
+            const { message } = usuario;
+    
+            console.log('erro ao buscar usuário: ');
+            console.error(message);
+    
+            res.sendStatus(404);
+        }
+        else { 
+            res.json(usuario);
+        }
     }
-    else { 
-        res.json(usuario);
+    catch(err){
+        const conteudo = {
+            msg: 'erro ao buscar este usuário'
+        };
+
+        console.log(conteudo);
+
+        res.json(conteudo);
     }
 });
 
-export default procuraUsuarioRouter;
+export default procuraUsuarioRoute;

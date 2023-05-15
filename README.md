@@ -45,3 +45,5 @@ Instale as dependências:
     (GET) /id -> retorna o perfil do id correspondente
     (GET) /lista-usuarios -> retorna todos os perfis de todos os usuários 
     (POST) /cadastro -> adiciona ao banco de dados o novo perfil (contendo nome, email e senha). Retorna 409 se já existir.
+    (DELETE) /remove -> remove um usuário por ID
+    (PUT) /edita  -> edita um usuário específico

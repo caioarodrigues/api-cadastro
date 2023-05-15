@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import DBController from '../controllers/BDController';
-import { Usuario } from './types/usuario';
+import { Usuario } from '../types/usuario';
 import { AdicionaUsuarioException } from '../exceptions/AdicionaUsuarioException';
 
 const cadastroRouter = Router();

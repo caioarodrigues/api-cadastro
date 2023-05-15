@@ -1,17 +1,19 @@
 import { Prisma, PrismaClient, User } from "@prisma/client";
-import { Usuario } from "../routes/types/usuario";
+import { Usuario } from "../types/usuario";
 import { AdicionaUsuarioException } from "../exceptions/AdicionaUsuarioException";
 import { RemoveUsuarioException } from "../exceptions/RemoveUsuarioException";
 import { GetUsuarioException } from "../exceptions/GetUsuarioException";
-import { usuarioGlobal } from "../routes/types/usuarioGlobal";
+import { usuarioGlobal } from "../types/usuarioGlobal";
+import { EditaUsuarioException } from "../exceptions/EditaUsuarioException";
 
 
 export default class DBController {
     prisma = new PrismaClient();
     private constructor(){}
-    
+    private static _instancia = new DBController();
+
     public static criaDBController(){
-        return new DBController();
+        return this._instancia;
     }
 
     async adicionaUsuario(usuario: Usuario): Promise<void | AdicionaUsuarioException>{
@@ -34,6 +36,8 @@ export default class DBController {
                 password: senha
             }
         });
+
+        await this.prisma.$disconnect();
     }
     async removeUsuario(id: number): Promise<void | RemoveUsuarioException>{
         const ehExistente: boolean = !!await this.prisma.user.findFirst({
@@ -50,6 +54,9 @@ export default class DBController {
                 id: id
             }
         });
+
+        console.log('sucesso ao remover usuário!');
+        await this.prisma.$disconnect();
     }
     async getUsuario(id: number): Promise<usuarioGlobal | GetUsuarioException>{
         const usuario = await this.prisma.user.findFirst({
@@ -62,6 +69,8 @@ export default class DBController {
             return new GetUsuarioException('Usuário não encontrado!');
         
         const { id: _id, email, name } = usuario;
+        
+        await this.prisma.$disconnect();
 
         return {
             id: _id,
@@ -70,12 +79,34 @@ export default class DBController {
         };
     } 
     async getUsuarios(): Promise<usuarioGlobal[]>{
-        const users = (await this.prisma.user.findMany({})).map(u => {
-            const { email, id, name } = u;
-
-            return { email, id, nome: name };
+        const users = await this.prisma.user.findMany({});
+        const usuariosFiltrados = users.map(({ name, email, id }) => {
+            return { nome: name, email, id};
         });
 
-        return users;
+        await this.prisma.$disconnect();
+
+        return usuariosFiltrados;
+    }
+    async editaUsuario(usuario: Usuario, id: number): Promise<void | EditaUsuarioException>{
+        const { nome, email, senha } = usuario;
+
+        try{
+            //aparentemente ele está enviando o id como string, ao invés de int
+            await this.prisma.user.update({
+                where: { id: id },
+                data: {
+                    name: nome,
+                    email: email,
+                    password: senha
+                }
+            });
+        }
+        catch(err){
+            return new EditaUsuarioException('Este usuário não existe!');
+        }
+        finally{
+            await this.prisma.$disconnect();
+        }
     }
 }
