@@ -1,13 +1,9 @@
 import { Router, Request, Response } from "express";
+import RoutesController from "../controllers/RoutesController";
 
 const indexRouter = Router();
+const routesController = RoutesController.criaRoutesController();
 
-indexRouter.get('/', (req: Request, res: Response) => {
-    const msg: {} = {
-        conteudo: 'Olá, mundo!'
-    }
-
-    res.json(msg);
-});
+indexRouter.get('/', routesController.getIndex);
 
 export default indexRouter;

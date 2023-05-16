@@ -1,24 +1,9 @@
-import { Router, Request, Response } from "express";
-import DBController from "../controllers/BDController";
+import { Router } from "express";
+import RoutesController from "../controllers/RoutesController";
 
-const dbController = DBController.criaDBController();
 const removeUsuarioRouter = Router();
+const routesController = RoutesController.criaRoutesController();
 
-removeUsuarioRouter.delete('/remove', async (req: Request, res: Response) => {
-    const id = parseInt(req.body.id);
-
-    try{
-        await dbController.removeUsuario(id);
-
-        console.log('sucesso ao remover usuário');
-        res.sendStatus(200);
-    }
-    catch(err){
-        console.log('erro ao remover usuário: ');
-        console.error(err);
-
-        res.sendStatus(409);
-    }
-});
+removeUsuarioRouter.delete('/remove', routesController.deleteRemoveUsuario);
 
 export default removeUsuarioRouter;

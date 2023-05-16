@@ -6,9 +6,8 @@ import { GetUsuarioException } from "../exceptions/GetUsuarioException";
 import { usuarioGlobal } from "../types/usuarioGlobal";
 import { EditaUsuarioException } from "../exceptions/EditaUsuarioException";
 
-
 export default class DBController {
-    prisma = new PrismaClient();
+    private prisma = new PrismaClient();
     private constructor(){}
     private static _instancia = new DBController();
 

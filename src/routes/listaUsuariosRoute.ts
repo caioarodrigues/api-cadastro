@@ -1,13 +1,9 @@
-import { Router, Request, Response } from "express";
-import DBController from "../controllers/BDController";
+import { Router } from "express";
+import RoutesController from "../controllers/RoutesController";
 
 const listaUsuariosRouter = Router();
-const dbController = DBController.criaDBController();
+const routesController = RoutesController.criaRoutesController();
 
-listaUsuariosRouter.get('/lista-usuarios', async (req: Request, res: Response) => {
-    const usuarios = await dbController.getUsuarios();
-
-    res.json(usuarios);
-});
+listaUsuariosRouter.get('/lista-usuarios', routesController.getListaUsuarios);
 
 export default listaUsuariosRouter;
